@@ -9,13 +9,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 
 public class GameLogic extends UniversalAdapter {
 
     public static final int INITIAL_BOARD_SIZE = 4;
-    private JFrame mainGame;
+    private final JFrame mainGame;
     private Board currentBoard;
     @Getter
     private JLabel label;
@@ -27,7 +26,9 @@ public class GameLogic extends UniversalAdapter {
 
 
 
+
     public GameLogic(JFrame mainGame) {
+
         this.mainGame = mainGame;
         this.currentBoardSize = INITIAL_BOARD_SIZE;
         this.initializeNewBoard(this.currentBoardSize);
@@ -47,7 +48,6 @@ public class GameLogic extends UniversalAdapter {
         this.mainGame.repaint();
     }
 
-
     private void updateBoardSizeLabel() {
         this.boardSizeLabel.setText("CURRENT BOARD SIZE: " + this.currentBoardSize);
         this.mainGame.revalidate();
@@ -60,6 +60,122 @@ public class GameLogic extends UniversalAdapter {
         this.mainGame.add(this.currentBoard);
         this.updateNameLabel();
     }
+    private void checkPathCorrection() {
+        int actualX ;
+        int actualY ;
+        int befourX = 0;
+        int befourY = 0;
+
+        for (int x = 0; x < this.currentBoardSize; x++) {
+            for (int y = 0; y < this.currentBoardSize; y++) {
+
+                if (this.currentBoard.getOnePipe(x, y).getState().equals((State.START))) {
+                    befourX = this.currentBoard.getOnePipe(x, y).getsX();
+                    befourY = this.currentBoard.getOnePipe(x, y).getsY();
+                    break;
+                }
+            }
+        }
+        while(true) {
+            while(true) {
+                if (this.currentBoard.getOnePipe(befourX, befourY).getPozition(1).equals(Pozition.RIGHT)) {
+                    actualX = befourX;
+                    actualY = befourY + 1;
+                    System.out.println(actualX + ", " + actualY);
+                    if (this.currentBoard.getOnePipe(actualX, actualY).getPozition(0).equals(Pozition.LEFT)) {
+                        if (this.currentBoard.getOnePipe(actualX, actualY).getState().equals(State.STRAIGHT)) {
+
+                            befourY = actualY;
+                            actualY++;
+                            System.out.println(actualX + ", " + actualY);
+                            break;
+                        }
+                        if (this.currentBoard.getOnePipe(actualX, actualY).getState().equals(State.LTYPE)) {
+
+                            befourY = actualY;
+                            actualX++;
+                            System.out.println(actualX + ", " + actualY);
+                            break;
+                        }
+
+                    }
+                    System.out.println(actualX + ", " + actualY);
+
+                }
+                if (this.currentBoard.getOnePipe(befourX, befourY).getPozition(1).equals(Pozition.LEFT)) {
+                    actualX = befourX;
+                    actualY = befourY - 1;
+                    System.out.println(actualX + ", " + actualY);
+                    if (this.currentBoard.getOnePipe(actualX, actualY).getPozition(0).equals(Pozition.RIGHT)) {
+                        if (this.currentBoard.getOnePipe(actualX, actualY).getState().equals(State.STRAIGHT)) {
+
+                            befourY = actualY;
+                            actualY--;
+                            System.out.println(actualX + ", " + actualY);
+                            break;
+                        }
+                        if (this.currentBoard.getOnePipe(actualX, actualY).getState().equals(State.LTYPE)) {
+
+                            befourY = actualY;
+                            actualX++;
+                            System.out.println(actualX + ", " + actualY);
+                            break;
+                        }
+
+
+                    }
+                }
+                if (this.currentBoard.getOnePipe(befourX, befourY).getPozition(1).equals(Pozition.UP)) {
+                    actualX = befourX + 1;
+                    actualY = befourY;
+                    System.out.println(actualX + ", " + actualY);
+                    if (this.currentBoard.getOnePipe(actualX, actualY).getPozition(0).equals(Pozition.DOWN)) {
+                        if (this.currentBoard.getOnePipe(actualX, actualY).getState().equals(State.STRAIGHT)) {
+                            befourX = actualX;
+
+                            actualY++;
+                            System.out.println(actualX + ", " + actualY);
+                            break;
+                        }
+                        if (this.currentBoard.getOnePipe(actualX, actualY).getState().equals(State.LTYPE)) {
+                            befourX = actualX;
+
+                            actualX--;
+                            System.out.println(actualX + ", " + actualY);
+                            break;
+                        }
+
+                    }
+                }
+                if (this.currentBoard.getOnePipe(befourX, befourY).getPozition(1).equals(Pozition.DOWN)) {
+                    actualX = befourX ;
+                    actualY = befourY-1;
+                    System.out.println(actualX + ", " + actualY);
+                    if (this.currentBoard.getOnePipe(actualX, actualY).getPozition(0).equals(Pozition.UP)) {
+                        if (this.currentBoard.getOnePipe(actualX, actualY).getState().equals(State.STRAIGHT)) {
+
+                            befourY = actualY;
+                            actualY--;
+                            System.out.println(actualX + ", " + actualY);
+                            break;
+                        }
+                        if (this.currentBoard.getOnePipe(actualX, actualY).getState().equals(State.LTYPE)) {
+
+                            befourY = actualY;
+                            actualX++;
+                            System.out.println(actualX + ", " + actualY);
+                            break;
+                        }
+
+                    }
+                    System.out.println(actualX + ", " + actualY);
+
+                }
+            }
+        }
+
+    }
+
 
     private void initializeNewBoard(int dimension) {
         this.currentBoard = new Board(dimension);
@@ -69,11 +185,20 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        this.gameRestart();
-        this.mainGame.revalidate();
-        this.mainGame.repaint();
-        this.mainGame.setFocusable(true);
-        this.mainGame.requestFocus();
+        if (e.getActionCommand().equals("RESTART")) {
+
+            this.gameRestart();
+            this.mainGame.revalidate();
+            this.mainGame.repaint();
+            this.mainGame.setFocusable(false);
+            this.mainGame.requestFocus();
+
+        } else if (e.getActionCommand().equals("CHECK")) {
+            System.out.println("CHECK");
+            //this.checkPathCorrection();
+        }
+
+
     }
 
     @Override
@@ -96,38 +221,16 @@ public class GameLogic extends UniversalAdapter {
             if(!((Pipe) current).getState().equals(State.FREE) && !((Pipe) current).getState().equals(State.START) && !((Pipe) current).getState().equals(State.END) ) {
 
                 this.counter++;
-                this.currentBoard.findPipe((Pipe) current).swapTypePositionInfo();
-                System.out.println("  "+this.currentBoard.findPipe((Pipe) current).getPozitionInfo(2));
-                System.out.print(""+this.currentBoard.findPipe((Pipe) current).getPozitionInfo(0));
-                System.out.println("   "+this.currentBoard.findPipe((Pipe) current).getPozitionInfo(1));
-                System.out.println("  "+this.currentBoard.findPipe((Pipe) current).getPozitionInfo(3));
+                ((Pipe) current).swapTypePositionInfo();
+                System.out.println("  "+((Pipe) current).getPozition(0)+", "+ ((Pipe) current).getPozition(1));
+                System.out.println(((Pipe) current).getsX()+", "+((Pipe) current).getsY());
+
                 this.currentBoard.repaint();
 
-        }
-
-    }
-
-
-    private boolean checkWin() {
-        ArrayList<Pipe> playableBlack = this.currentBoard.checkPlayable();
-        ArrayList<Pipe> playableWhite = this.currentBoard.checkPlayable();
-        if (playableBlack.size() == 0 && playableWhite.size() == 0) {
-            int black = this.currentBoard.count(State.STRAIGHT);
-            int white = this.currentBoard.count(State.LTYPE);
-            int counter = this.counter++;
-            if (black > white) {
-                this.label.setText(" WINS " + counter);
-                this.gameRestart();
-            } else if (black < white) {
-                this.label.setText(" WINS " + counter);
-                this.gameRestart();
-            }  else  {
-                this.label.setText("Its TIE!");
-                this.gameRestart();
+        }else{
+                System.out.println(((Pipe) current).getsX()+", "+((Pipe) current).getsY());
             }
-        }
 
-        return playableBlack.size() == 0 && playableWhite.size() == 0;
     }
 
     @Override
@@ -137,6 +240,7 @@ public class GameLogic extends UniversalAdapter {
         this.gameRestart();
         this.mainGame.setFocusable(true);
         this.mainGame.requestFocus();
+
     }
 
     @Override

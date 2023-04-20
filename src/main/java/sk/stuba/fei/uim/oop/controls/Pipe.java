@@ -10,23 +10,15 @@ public class Pipe extends JPanel {
 
     @Getter @Setter
     private State state;
+
+    private final Pozition[] pozition;
     @Setter
     private boolean highlight;
     @Getter @Setter
     private boolean checkIsFree;
-    @Setter
-    private int[] pozitionInfo;
-
     private final int x;
+
     private final int y;
-
-    public int getPozitionInfo(int i) {
-        return pozitionInfo[i];
-    }
-
-
-
-
 
     public Pipe(int x,int y) {
         this.x = x;
@@ -34,34 +26,48 @@ public class Pipe extends JPanel {
         this.state = State.FREE;
         this.setBorder(BorderFactory.createLineBorder(new Color(51,153,255)));
         this.setBackground(new Color(51,204,255));
-        this.pozitionInfo = new int[]{1, 2, 0, 0}; // left, right, up , down
+        this.pozition = new Pozition[]{null,null};
 
+    }
+    public int getsX() {return x;}
+    public int getsY() {return y;}
+    public Pozition getPozition(int x) {return pozition[x];}
+    public void setPozition(Pozition pozition,int x) {this.pozition[x] = pozition;}
+
+    public void setStraightPositionInfo(){
+        this.setPozition(Pozition.LEFT,0);
+        this.setPozition(Pozition.RIGHT,1);
     }
    public void setLTypePositionInfo(){
-            this.pozitionInfo = new int[]{1, 0, 0 , 2};
+       this.setPozition(Pozition.LEFT,0);
+       this.setPozition(Pozition.DOWN,1);
    }
     public void setStartPositionInfo(){
-        this.pozitionInfo = new int[]{0, 1, 0 , 0};
+        this.setPozition(Pozition.RIGHT,1);
     }
     public void setEndPositionInfo(){
-        this.pozitionInfo = new int[]{2, 0, 0 , 0};
+        this.setPozition(Pozition.LEFT,0);
     }
-    public void swapTypePositionInfo(){
-        int[] actualPositions = new int[pozitionInfo.length];
-        System.arraycopy(pozitionInfo, 0, actualPositions, 0, pozitionInfo.length);
 
-        this.pozitionInfo[0] = actualPositions[3];
-        this.pozitionInfo[1] = actualPositions[2];
-        this.pozitionInfo[2] = actualPositions[0];
-        this.pozitionInfo[3] = actualPositions[1];
+    public void swapTypePositionInfo() {
+        if (this.state.equals(State.STRAIGHT)) {
+            if (this.getPozition(0).equals(Pozition.LEFT)) {this.setPozition(Pozition.UP, 0);this.setPozition(Pozition.DOWN, 1);return;}
+            if (this.getPozition(0).equals(Pozition.UP)) {this.setPozition(Pozition.RIGHT, 0);this.setPozition(Pozition.LEFT, 1);return;}
+            if (this.getPozition(0).equals(Pozition.RIGHT)) {this.setPozition(Pozition.DOWN, 0);this.setPozition(Pozition.UP, 1);return;}
+            if (this.getPozition(0).equals(Pozition.DOWN)) {this.setPozition(Pozition.LEFT, 0);this.setPozition(Pozition.RIGHT, 1);return;}
+        }
+        if (this.state.equals(State.LTYPE)) {
+            if (this.getPozition(0).equals(Pozition.LEFT) && this.getPozition(1).equals(Pozition.DOWN)) {this.setPozition(Pozition.UP, 0);this.setPozition(Pozition.LEFT, 1);return;}
+            if (this.getPozition(0).equals(Pozition.UP) && this.getPozition(1).equals(Pozition.LEFT)) {this.setPozition(Pozition.RIGHT, 0);this.setPozition(Pozition.UP, 1);return;}
+            if (this.getPozition(0).equals(Pozition.RIGHT) && this.getPozition(1).equals(Pozition.UP)) {this.setPozition(Pozition.DOWN, 0);this.setPozition(Pozition.RIGHT, 1);return;}
+            if (this.getPozition(0).equals(Pozition.DOWN) && this.getPozition(1).equals(Pozition.RIGHT)) {this.setPozition(Pozition.LEFT, 0);this.setPozition(Pozition.DOWN, 1);}
+        }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        double[]mainTube = new double[]{0,0,0,0} ;
-        double[]firstHoop = new double[]{0,0,0,0} ;
-        double[]secondHoop = new double[]{0,0,0,0};
+        Graphics2D g2d = (Graphics2D) g;
+        double angle = Math.toRadians(0);
 
 
                 if (this.highlight) {
@@ -70,113 +76,93 @@ public class Pipe extends JPanel {
                     this.highlight = false;
 
                 }
-
-        if (this.state.equals(State.STRAIGHT)) {
-            if(this.getPozitionInfo(0) == 1 || this.getPozitionInfo(0) == 2){
-                mainTube[0] =  0.001; mainTube[1] =  0.38; mainTube[2] =  0.9; mainTube[3] =  0.25;
-                firstHoop[0] = 0.001; firstHoop[1] = 0.26; firstHoop[2] = 0.2; firstHoop[3] =0.5 ;
-                secondHoop[0] = 0.79; secondHoop[1] = 0.26; secondHoop[2] = 0.5; secondHoop[3] = 0.5;
-            }
-            if(this.getPozitionInfo(2) == 1 || this.getPozitionInfo(2) == 2){
-                mainTube[0] =  0.39;mainTube[1] =  0.001;mainTube[2] =  0.23;mainTube[3] =  0.9;
-                firstHoop[0] = 0.28; firstHoop[1] = 0.001; firstHoop[2] = 0.45; firstHoop[3] =0.23 ;
-                secondHoop[0] = 0.28; secondHoop[1] = 0.77; secondHoop[2] = 0.45; secondHoop[3] = 1.0;
-            }
-
-
-            g.setColor(new Color(153, 153, 153));
-            g.fillRect((int) (0 + this.getWidth() * mainTube[0]), (int) (0 + this.getHeight() * mainTube[1]),
-                    (int) (this.getWidth() * mainTube[2]), (int) (this.getHeight() * mainTube[3]));
-
-            g.setColor(new Color(102, 102, 102));
-            g.fillRect((int) (0 + this.getWidth() * firstHoop[0]), (int) (0 + this.getHeight() * firstHoop[1]),
-                    (int) (this.getWidth() * firstHoop[2]), (int) (this.getHeight() * firstHoop[3]));
-
-            g.fillRect((int) (0 + this.getWidth() * secondHoop[0]), (int) (0 + this.getHeight() * secondHoop[1]),
-                    (int) (this.getWidth() * secondHoop[2]), (int) (this.getHeight() * secondHoop[3]));
-
-
-        } if (this.state.equals(State.LTYPE)) {
-            double[]mainTube2 = new double[]{0,0,0,0} ;
-            if(this.getPozitionInfo(0) == 1 && this.getPozitionInfo(3) == 2){
-                mainTube[0] =  0.001; mainTube[1] =  0.38; mainTube[2] =  0.62; mainTube[3] =  0.25;
-                mainTube2[0] =  0.393;mainTube2[1] =  0.41;mainTube2[2] =  0.23;mainTube2[3] =  0.9;
-                firstHoop[0] = 0.001; firstHoop[1] = 0.26; firstHoop[2] = 0.2; firstHoop[3] =0.5 ;
-                secondHoop[0] = 0.28; secondHoop[1] = 0.77; secondHoop[2] = 0.45; secondHoop[3] = 1.0;
-            }
-            if(this.getPozitionInfo(2) == 1 && this.getPozitionInfo(0) == 2){
-                mainTube[0] =  0.001; mainTube[1] =  0.38; mainTube[2] =  0.62; mainTube[3] =  0.25;
-                mainTube2[0] =  0.393;mainTube2[1] =  0.001;mainTube2[2] =  0.23;mainTube2[3] =  0.42;
-                firstHoop[0] = 0.28; firstHoop[1] = 0.001; firstHoop[2] = 0.45; firstHoop[3] =0.23 ;
-                secondHoop[0] = 0.001; secondHoop[1] = 0.26; secondHoop[2] = 0.2; secondHoop[3] =0.5 ;
-
-            }
-            if(this.getPozitionInfo(1) == 1 && this.getPozitionInfo(2) == 2){
-                mainTube[0] =  0.393; mainTube[1] =  0.38; mainTube[2] =  0.9; mainTube[3] =  0.25;
-                mainTube2[0] =  0.393;mainTube2[1] =  0.001;mainTube2[2] =  0.23;mainTube2[3] =  0.42;
-                firstHoop[0] = 0.79; firstHoop[1] = 0.26; firstHoop[2] = 0.5; firstHoop[3] = 0.5;
-                secondHoop[0] = 0.28; secondHoop[1] = 0.001; secondHoop[2] = 0.45; secondHoop[3] =0.23 ;
-
-            }
-            if(this.getPozitionInfo(1) == 2 && this.getPozitionInfo(3) == 1){
-                mainTube[0] =  0.393; mainTube[1] =  0.38; mainTube[2] =  0.9; mainTube[3] =  0.25;
-                mainTube2[0] =  0.393;mainTube2[1] =  0.41;mainTube2[2] =  0.23;mainTube2[3] =  0.9;
-                secondHoop[0] = 0.79; secondHoop[1] = 0.26; secondHoop[2] = 0.5; secondHoop[3] = 0.5;
-                firstHoop[0] = 0.28; firstHoop[1] = 0.77; firstHoop[2] = 0.45; firstHoop[3] = 1.0;
-
-            }
-
-            g.setColor(new Color(153, 153, 153));
-            g.fillRect((int) (0 + this.getWidth() * mainTube[0]), (int) (0 + this.getHeight() * mainTube[1]),
-                    (int) (this.getWidth() * mainTube[2]), (int) (this.getHeight() * mainTube[3]));
-
-            g.fillRect((int) (0 + this.getWidth() * mainTube2[0]), (int) (0 + this.getHeight() * mainTube2[1]),
-                    (int) (this.getWidth() * mainTube2[2]), (int) (this.getHeight() * mainTube2[3]));
-
-
-            g.setColor(new Color(102, 102, 102));
-            g.fillRect((int) (0 + this.getWidth() * firstHoop[0]), (int) (0 + this.getHeight() * firstHoop[1]),
-                    (int) (this.getWidth() * firstHoop[2]), (int) (this.getHeight() * firstHoop[3]));
-
-
-            g.fillRect((int) (0 + this.getWidth() * secondHoop[0]), (int) (0 + this.getHeight() * secondHoop[1]),
-                    (int) (this.getWidth() * secondHoop[2]), (int) (this.getHeight() * secondHoop[3]));
-        }
-
         if (this.state.equals(State.START)) {
 
-            mainTube[0] =  0.001; mainTube[1] =  0.38; mainTube[2] =  0.9; mainTube[3] =  0.25;
-            secondHoop[0] = 0.79; secondHoop[1] = 0.26; secondHoop[2] = 0.5; secondHoop[3] = 0.5;
+            if(this.getPozition(1).equals(Pozition.DOWN)){angle = Math.toRadians(90);}
+            if(this.getPozition(1).equals(Pozition.LEFT)){angle = Math.toRadians(180);}
+            if(this.getPozition(1).equals(Pozition.UP)){angle = Math.toRadians(270);}
+
+
+            g2d.rotate(angle,this.getWidth()/2.0,this.getHeight()/2.0);
+
+            g2d.setColor(new Color(153, 153, 153));
+            g2d.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.38),
+                    (int) (this.getWidth() * 0.9), (int) (this.getHeight() * 0.25));
+
+            g2d.setColor(new Color(102, 102, 102));
+            g2d.fillRect((int) (0 + this.getWidth() * 0.79), (int) (0 + this.getHeight() * 0.261),
+                    (int) (this.getWidth() * 0.5), (int) (this.getHeight() * 0.5));
+
+
+            g2d.setColor(new Color(102,255,102));
+            g2d.fillRect((int) (0 + this.getWidth() * 0.2), (int) (0 + this.getHeight() * 0.46),
+                    (int) (this.getWidth() * 0.2), (int) (this.getHeight() * 0.1));
+        }
+        if (this.state.equals(State.STRAIGHT)) {
+
+            if(this.getPozition(0).equals(Pozition.UP )){angle = Math.toRadians(90);}
+            if(this.getPozition(0).equals(Pozition.RIGHT )){angle = Math.toRadians(180);}
+            if( this.getPozition(0).equals(Pozition.DOWN)){angle = Math.toRadians(270);}
+
+            g2d.rotate(angle,this.getWidth()/2.0,this.getHeight()/2.0);
 
             g.setColor(new Color(153, 153, 153));
-            g.fillRect((int) (0 + this.getWidth() * mainTube[0]), (int) (0 + this.getHeight() * mainTube[1]),
-                    (int) (this.getWidth() * mainTube[2]), (int) (this.getHeight() * mainTube[3]));
+            g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.39),
+                    (int) (this.getWidth() * 0.9), (int) (this.getHeight() * 0.25));
 
             g.setColor(new Color(102, 102, 102));
-            g.fillRect((int) (0 + this.getWidth() * secondHoop[0]), (int) (0 + this.getHeight() * secondHoop[1]),
-                    (int) (this.getWidth() * secondHoop[2]), (int) (this.getHeight() * secondHoop[3]));
+            g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.261),
+                    (int) (this.getWidth() * 0.20), (int) (this.getHeight() * 0.5));
+
+            g.fillRect((int) (0 + this.getWidth() * 0.80), (int) (0 + this.getHeight() * 0.261),
+                    (int) (this.getWidth() * 0.5), (int) (this.getHeight() * 0.5));
 
 
-            g.setColor(new Color(102,255,102));
-            g.fillRect((int) (0 + this.getWidth() * 0.2), (int) (0 + this.getHeight() * 0.45),
-                    (int) (this.getWidth() * 0.2), (int) (this.getHeight() * 0.1));
+        }
+        if (this.state.equals(State.LTYPE)) {
+
+            if(this.getPozition(0).equals(Pozition.UP)){angle = Math.toRadians(90);}
+            if(this.getPozition(0).equals(Pozition.RIGHT)){angle =Math.toRadians(180);}
+            if(this.getPozition(0).equals(Pozition.DOWN)){angle = Math.toRadians(270);}
+
+
+            g2d.rotate(angle,this.getWidth()/2.0,this.getHeight()/2.0);
+
+            g.setColor(new Color(153, 153, 153));
+            g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() *  0.381),
+                    (int) (this.getWidth() * 0.51), (int) (this.getHeight() * 0.25));
+
+            g.fillRect((int) (0 + this.getWidth() * 0.3911), (int) (0 + this.getHeight() * 0.38),
+                    (int) (this.getWidth() * 0.23), (int) (this.getHeight() * 0.9));
+
+            g.setColor(new Color(102, 102, 102));
+            g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.261),
+                    (int) (this.getWidth() * 0.21), (int) (this.getHeight() * 0.5));
+
+
+            g.fillRect((int) (0 + this.getWidth() * 0.2608), (int) (0 + this.getHeight() * 0.8),
+                    (int) (this.getWidth() * 0.5), (int) (this.getHeight() * 1.0));
+
         }
         if (this.state.equals(State.END)) {
 
-            mainTube[0] =  0.001; mainTube[1] =  0.38; mainTube[2] =  0.999; mainTube[3] =  0.25;
-            firstHoop[0] = 0.001; firstHoop[1] = 0.26; firstHoop[2] = 0.2; firstHoop[3] =0.5 ;
+            if(this.getPozition(0).equals(Pozition.UP)){angle = Math.toRadians(90);}
+            if(this.getPozition(0).equals(Pozition.RIGHT)){angle = Math.toRadians(180);}
+            if(this.getPozition(0).equals(Pozition.DOWN)){angle = Math.toRadians(270);}
+
+            g2d.rotate(angle,this.getWidth()/2.0,this.getHeight()/2.0);
 
             g.setColor(new Color(153, 153, 153));
-            g.fillRect((int) (0 + this.getWidth() * mainTube[0]), (int) (0 + this.getHeight() * mainTube[1]),
-                    (int) (this.getWidth() * mainTube[2]), (int) (this.getHeight() * mainTube[3]));
+            g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.38),
+                    (int) (this.getWidth() * 0.999), (int) (this.getHeight() * 0.25));
 
             g.setColor(new Color(102, 102, 102));
-            g.fillRect((int) (0 + this.getWidth() * firstHoop[0]), (int) (0 + this.getHeight() * firstHoop[1]),
-                    (int) (this.getWidth() * firstHoop[2]), (int) (this.getHeight() * firstHoop[3]));
+            g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.26),
+                    (int) (this.getWidth() * 0.21), (int) (this.getHeight() * 0.5));
 
 
             g.setColor(new Color(255,102,102));
-            g.fillRect((int) (0 + this.getWidth() * 0.59), (int) (0 + this.getHeight() * 0.45),
+            g.fillRect((int) (0 + this.getWidth() * 0.59), (int) (0 + this.getHeight() * 0.46),
                     (int) (this.getWidth() * 0.2), (int) (this.getHeight() * 0.1));
         }
 
