@@ -68,7 +68,6 @@ public class Board extends JPanel {
             for (int j = 0; j < dimension; j++) {
                 this.board[i][j] = new Pipe();
                 this.add(this.board[i][j]);
-
             }
         }
 
