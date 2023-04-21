@@ -13,7 +13,7 @@ public class Board extends JPanel {
     private Pipe[][] board;
     @Getter @Setter
     private boolean paint;
-    private int[][] maze;
+    private int[][] dps;
     private final int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     int[][] path;
 
@@ -82,7 +82,7 @@ public class Board extends JPanel {
         int StartPoz = getRandom().nextInt(dimension);
         int EndPoz = getRandom().nextInt(dimension);
 
-        this.recursive(dimension, StartPoz, EndPoz);
+        this.genrateDPS(dimension, StartPoz, EndPoz);
 
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
@@ -114,21 +114,21 @@ public Random getRandom(){
 
 }
 
-    private void recursive(int dimension,int StartPoz,int EndPoz){
-        this.maze = new int[dimension][dimension];
+    private void genrateDPS(int dimension, int StartPoz, int EndPoz){
+        this.dps = new int[dimension][dimension];
         generateMaze(0, 0,dimension);
 
          path = findShortestPath(dimension,StartPoz,EndPoz);
 
         if(path ==null){
-            recursive(dimension,StartPoz,EndPoz);
+            genrateDPS(dimension,StartPoz,EndPoz);
         }else {
-           printMaze(path,dimension,StartPoz,EndPoz);
+           printDPS(path,dimension,StartPoz,EndPoz);
 
         }
     }
     private void generateMaze(int x, int y,int dimension) {
-        maze[x][y] = 1;
+        dps[x][y] = 1;
         List<int[]> dirs = Arrays.asList(directions);
         Collections.shuffle(dirs);
 
@@ -138,25 +138,28 @@ public Random getRandom(){
             int nx = x + dx;
             int ny = y + dy;
 
-            if (nx >= 0 && nx < dimension && ny >= 0 && ny < dimension && maze[nx][ny] == 0) {
-                if (dx == 1) {maze[x][y] |= 2;}
-                else if (dx == -1){ maze[nx][ny] |= 2;}
-                else if (dy == 1){ maze[x][y] |= 1;}
-                else if (dy == -1) {maze[nx][ny] |= 1;}
+            if (nx >= 0 && nx < dimension && ny >= 0 && ny < dimension && dps[nx][ny] == 0) {
+                if (dx == 1) {
+                    dps[x][y] |= 2;}
+                else if (dx == -1){ dps[nx][ny] |= 2;}
+                else if (dy == 1){ dps[x][y] |= 1;}
+                else if (dy == -1) {
+                    dps[nx][ny] |= 1;}
                 generateMaze(nx, ny,dimension);
             }
         }
 
     }
-    public void printMaze(int[][] path,int dimension,int StartPoz,int EndPoz) {
+    public void printDPS(int[][] path,int dimension,int StartPoz,int EndPoz) {
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 if (i == StartPoz && j == 0) System.out.print("S ");
                 else if (i == EndPoz && j == dimension - 1) System.out.print("E ");
-                else if (maze[i][j] == 0) System.out.print("# ");
+                else if (dps[i][j] == 0) System.out.print("# ");
                 else if (path[i][j] == 1) System.out.print("X ");
                 else System.out.print(". ");
             }
+
             System.out.println();
         }
 
@@ -183,7 +186,7 @@ public Random getRandom(){
                 int nx = x + dx;
                 int ny = y + dy;
 
-                if (nx >= 0 && nx < dimension && ny >= 0 && ny < dimension && maze[nx][ny] == 1 && path[nx][ny] == -1) {
+                if (nx >= 0 && nx < dimension && ny >= 0 && ny < dimension && dps[nx][ny] == 1 && path[nx][ny] == -1) {
                     queue.offer(new int[]{nx, ny});
                     path[nx][ny] = path[x][y] + 1;
                 }
