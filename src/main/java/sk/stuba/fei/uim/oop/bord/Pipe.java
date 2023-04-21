@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.oop.controls;
+package sk.stuba.fei.uim.oop.bord;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,6 @@ public class Pipe extends JPanel {
 
     @Getter @Setter
     private State state;
-
     private final Pozition[] pozition;
     @Setter
     private boolean highlight;
@@ -27,6 +26,7 @@ public class Pipe extends JPanel {
         this.setBorder(BorderFactory.createLineBorder(new Color(51,153,255)));
         this.setBackground(new Color(51,204,255));
         this.pozition = new Pozition[]{null,null};
+
 
     }
     public int getsX() {return x;}
@@ -114,7 +114,7 @@ public class Pipe extends JPanel {
             g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.261),
                     (int) (this.getWidth() * 0.20), (int) (this.getHeight() * 0.5));
 
-            g.fillRect((int) (0 + this.getWidth() * 0.80), (int) (0 + this.getHeight() * 0.261),
+            g.fillRect((int) (0 + this.getWidth() * 0.81), (int) (0 + this.getHeight() * 0.261),
                     (int) (this.getWidth() * 0.5), (int) (this.getHeight() * 0.5));
 
 
@@ -157,7 +157,7 @@ public class Pipe extends JPanel {
                     (int) (this.getWidth() * 0.999), (int) (this.getHeight() * 0.25));
 
             g.setColor(new Color(102, 102, 102));
-            g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.26),
+            g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.261),
                     (int) (this.getWidth() * 0.21), (int) (this.getHeight() * 0.5));
 
 

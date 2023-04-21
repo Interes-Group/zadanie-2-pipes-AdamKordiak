@@ -1,6 +1,10 @@
-package sk.stuba.fei.uim.oop.controls;
+package sk.stuba.fei.uim.oop.logic;
 
 import lombok.Getter;
+import sk.stuba.fei.uim.oop.bord.Board;
+import sk.stuba.fei.uim.oop.bord.Pipe;
+import sk.stuba.fei.uim.oop.bord.Pozition;
+import sk.stuba.fei.uim.oop.bord.State;
 
 
 import javax.swing.*;
@@ -13,7 +17,7 @@ import java.awt.event.MouseEvent;
 
 public class GameLogic extends UniversalAdapter {
 
-    public static final int INITIAL_BOARD_SIZE = 4;
+    public static final int INITIAL_BOARD_SIZE = 8;
     private final JFrame mainGame;
     private Board currentBoard;
     @Getter
@@ -59,6 +63,8 @@ public class GameLogic extends UniversalAdapter {
         this.initializeNewBoard(this.currentBoardSize);
         this.mainGame.add(this.currentBoard);
         this.updateNameLabel();
+        this.currentBoard.setPaint(true);
+
     }
     private void checkPathCorrection() {
         int actualX ;
@@ -188,10 +194,7 @@ public class GameLogic extends UniversalAdapter {
         if (e.getActionCommand().equals("RESTART")) {
 
             this.gameRestart();
-            this.mainGame.revalidate();
-            this.mainGame.repaint();
-            this.mainGame.setFocusable(false);
-            this.mainGame.requestFocus();
+
 
         } else if (e.getActionCommand().equals("CHECK")) {
             System.out.println("CHECK");
@@ -208,8 +211,8 @@ public class GameLogic extends UniversalAdapter {
             return;
         }
         ((Pipe) current).setHighlight(true);
+            this.mainGame.repaint();
 
-        this.currentBoard.repaint();
     }
 
     @Override
@@ -230,6 +233,7 @@ public class GameLogic extends UniversalAdapter {
         }else{
                 System.out.println(((Pipe) current).getsX()+", "+((Pipe) current).getsY());
             }
+        this.mainGame.repaint();
 
     }
 
@@ -249,6 +253,7 @@ public class GameLogic extends UniversalAdapter {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_R:
                 this.gameRestart();
+
                 break;
             case KeyEvent.VK_ESCAPE:
                 this.mainGame.dispose();

@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.oop.controls;
+package sk.stuba.fei.uim.oop.bord;
 
 public enum State {
     START,

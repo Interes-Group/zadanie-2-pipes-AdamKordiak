@@ -1,6 +1,6 @@
 package sk.stuba.fei.uim.oop.gui;
 
-import sk.stuba.fei.uim.oop.controls.GameLogic;
+import sk.stuba.fei.uim.oop.logic.GameLogic;
 
 import javax.swing.*;
 import java.awt.*;
