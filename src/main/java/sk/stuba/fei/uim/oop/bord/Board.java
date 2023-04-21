@@ -31,10 +31,8 @@ public class Board extends JPanel {
         this.paint = false;
 
     }
-    public Pipe getOnePipe(int x,int y) {
-        return board[x][y];
-    }
-    /*public void paintComponent(Graphics g) {
+
+    public void paintComponent(Graphics g) {
         if(this.paint) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
@@ -43,7 +41,7 @@ public class Board extends JPanel {
             g2d.rotate(angle, this.getWidth() / 2.0, this.getHeight() / 2.0);
             this.paint = false;
         }
-    }*/
+    }
     private void setTypesInfo(int dimension){
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
@@ -68,7 +66,7 @@ public class Board extends JPanel {
         this.setLayout(new GridLayout(dimension, dimension));
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
-                this.board[i][j] = new Pipe(i,j);
+                this.board[i][j] = new Pipe();
                 this.add(this.board[i][j]);
 
             }
@@ -122,10 +120,8 @@ public Random getRandom(){
 
         if(path ==null){
             genrateDPS(dimension,StartPoz,EndPoz);
-        }else {
-           printDPS(path,dimension,StartPoz,EndPoz);
-
         }
+
     }
     private void generateMaze(int x, int y,int dimension) {
         dps[x][y] = 1;
@@ -150,20 +146,7 @@ public Random getRandom(){
         }
 
     }
-    public void printDPS(int[][] path,int dimension,int StartPoz,int EndPoz) {
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                if (i == StartPoz && j == 0) System.out.print("S ");
-                else if (i == EndPoz && j == dimension - 1) System.out.print("E ");
-                else if (dps[i][j] == 0) System.out.print("# ");
-                else if (path[i][j] == 1) System.out.print("X ");
-                else System.out.print(". ");
-            }
 
-            System.out.println();
-        }
-
-    }
     private int[][] findShortestPath(int dimension, int StartPoz,int EndPoz) {
 
         Queue<int[]> queue = new LinkedList<>();

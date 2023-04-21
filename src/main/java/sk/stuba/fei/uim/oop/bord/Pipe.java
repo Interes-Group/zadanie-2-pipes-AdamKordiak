@@ -15,13 +15,10 @@ public class Pipe extends JPanel {
     private boolean highlight;
     @Getter @Setter
     private boolean checkIsFree;
-    private final int x;
 
-    private final int y;
 
-    public Pipe(int x,int y) {
-        this.x = x;
-        this.y = y;
+    public Pipe() {
+
         this.state = State.FREE;
         this.setBorder(BorderFactory.createLineBorder(new Color(51,153,255)));
         this.setBackground(new Color(51,204,255));
@@ -29,8 +26,7 @@ public class Pipe extends JPanel {
 
 
     }
-    public int getsX() {return x;}
-    public int getsY() {return y;}
+
     public Pozition getPozition(int x) {return pozition[x];}
     public void setPozition(Pozition pozition,int x) {this.pozition[x] = pozition;}
 
