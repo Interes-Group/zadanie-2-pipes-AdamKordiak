@@ -57,7 +57,7 @@ public class GameLogic extends UniversalAdapter {
         this.mainGame.repaint();
     }
 
-    private void gameRestart() {
+    private void restart() {
         this.mainGame.remove(this.currentBoard);
         this.initializeNewBoard(this.currentBoardSize);
         this.mainGame.add(this.currentBoard);
@@ -77,7 +77,7 @@ public class GameLogic extends UniversalAdapter {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("RESTART")) {
 
-            this.gameRestart();
+            this.restart();
 
 
         } else if (e.getActionCommand().equals("CHECK")) {
@@ -113,9 +113,10 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void stateChanged(ChangeEvent e) {
+
         this.currentBoardSize = ((JSlider) e.getSource()).getValue();
         this.updateBoardSizeLabel();
-        this.gameRestart();
+        this.restart();
         this.mainGame.setFocusable(true);
         this.mainGame.requestFocus();
 
@@ -123,12 +124,14 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void keyPressed(KeyEvent e) {
+
         System.out.println(e);
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_R:
-                this.gameRestart();
 
+            case KeyEvent.VK_R:
+                this.restart();
                 break;
+
             case KeyEvent.VK_ESCAPE:
                 this.mainGame.dispose();
         }
