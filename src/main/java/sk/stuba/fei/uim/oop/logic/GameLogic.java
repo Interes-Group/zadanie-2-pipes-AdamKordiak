@@ -46,7 +46,6 @@ public class GameLogic extends UniversalAdapter {
         this.updateNameLabel();
         this.updateBoardSizeLabel();
 
-
     }
 
     private void updateNameLabel() {
@@ -60,7 +59,6 @@ public class GameLogic extends UniversalAdapter {
     private void updateBoardSizeLabel() {
 
         this.boardSizeLabel.setText("BOARD SIZE: " + this.currentBoardSize);
-
         this.mainGame.revalidate();
         this.mainGame.repaint();
     }
@@ -69,7 +67,6 @@ public class GameLogic extends UniversalAdapter {
         this.mainGame.remove(this.currentBoard);
         this.initializeNewBoard(this.currentBoardSize);
         this.mainGame.add(this.currentBoard);
-
         this.updateNameLabel();
 
     }
@@ -77,7 +74,6 @@ public class GameLogic extends UniversalAdapter {
 
     private void initializeNewBoard(int dimension) {
         this.currentBoard = new Board(dimension);
-
         this.currentBoard.addMouseMotionListener(this);
         this.currentBoard.addMouseListener(this);
     }
@@ -85,9 +81,7 @@ public class GameLogic extends UniversalAdapter {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("RESTART")) {
-
             this.restartGame();
-
 
         } else if (e.getActionCommand().equals("CHECK")) {
             this.counter++;
@@ -138,11 +132,9 @@ public class GameLogic extends UniversalAdapter {
 
         System.out.println(e);
         switch (e.getKeyCode()) {
-
             case KeyEvent.VK_R:
                 this.restartGame();
                 break;
-
             case KeyEvent.VK_ESCAPE:
                 this.mainGame.dispose();
         }
