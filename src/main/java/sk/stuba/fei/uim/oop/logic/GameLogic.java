@@ -139,6 +139,7 @@ public class GameLogic extends UniversalAdapter {
                 this.mainGame.dispose();
             case KeyEvent.VK_ENTER:
                 this.restartGame();
+                
 
         }
     }
