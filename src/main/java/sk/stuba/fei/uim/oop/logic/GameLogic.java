@@ -22,10 +22,10 @@ public class GameLogic extends UniversalAdapter {
     @Getter
     private JLabel label;
     @Getter
-    private JLabel boardSizeLabel;
-    @Getter
     private int counter;
     private int currentBoardSize;
+    @Getter
+    private JLabel boardSizeLabel;
 
 
 
@@ -34,11 +34,15 @@ public class GameLogic extends UniversalAdapter {
 
         this.mainGame = mainGame;
         this.currentBoardSize = INITIAL_BOARD_SIZE;
+
         this.initializeNewBoard(this.currentBoardSize);
         this.mainGame.add(this.currentBoard);
+
         this.label = new JLabel();
-        this.counter = 0;
+
         this.boardSizeLabel = new JLabel();
+        this.restartGame();
+
         this.updateNameLabel();
         this.updateBoardSizeLabel();
 
@@ -46,29 +50,34 @@ public class GameLogic extends UniversalAdapter {
     }
 
     private void updateNameLabel() {
+
         this.label.setText("WINS: " + this.counter);
+
         this.mainGame.revalidate();
         this.mainGame.repaint();
     }
 
     private void updateBoardSizeLabel() {
-        this.boardSizeLabel.setText("CURRENT BOARD SIZE: " + this.currentBoardSize);
+
+        this.boardSizeLabel.setText("BOARD SIZE: " + this.currentBoardSize);
+
         this.mainGame.revalidate();
         this.mainGame.repaint();
     }
 
-    private void restart() {
+    private void restartGame() {
         this.mainGame.remove(this.currentBoard);
         this.initializeNewBoard(this.currentBoardSize);
         this.mainGame.add(this.currentBoard);
+
         this.updateNameLabel();
-        this.currentBoard.setPaint(true);
 
     }
 
 
     private void initializeNewBoard(int dimension) {
         this.currentBoard = new Board(dimension);
+
         this.currentBoard.addMouseMotionListener(this);
         this.currentBoard.addMouseListener(this);
     }
@@ -77,10 +86,12 @@ public class GameLogic extends UniversalAdapter {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("RESTART")) {
 
-            this.restart();
+            this.restartGame();
 
 
         } else if (e.getActionCommand().equals("CHECK")) {
+            this.counter++;
+            this.restartGame();
         }
 
 
@@ -116,7 +127,7 @@ public class GameLogic extends UniversalAdapter {
 
         this.currentBoardSize = ((JSlider) e.getSource()).getValue();
         this.updateBoardSizeLabel();
-        this.restart();
+        this.restartGame();
         this.mainGame.setFocusable(true);
         this.mainGame.requestFocus();
 
@@ -129,7 +140,7 @@ public class GameLogic extends UniversalAdapter {
         switch (e.getKeyCode()) {
 
             case KeyEvent.VK_R:
-                this.restart();
+                this.restartGame();
                 break;
 
             case KeyEvent.VK_ESCAPE:

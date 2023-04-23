@@ -1,7 +1,6 @@
 package sk.stuba.fei.uim.oop.bord;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,11 +10,11 @@ import java.util.List;
 public class Board extends JPanel {
 
     private Pipe[][] board;
-    @Getter @Setter
-    private boolean paint;
+    @Getter
+
     private int[][] dps;
     private final int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    int[][] path;
+    private int[][] path;
 
 
     public Board(int dimension) {
@@ -27,39 +26,35 @@ public class Board extends JPanel {
         this.setTypesInfo(dimension);
 
         this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        this.setBackground(new Color(51,153,255));
-        this.paint = false;
+        this.setBackground(new Color(51, 153, 255));
+
 
     }
 
-    public void paintComponent(Graphics g) {
-        if(this.paint) {
-            super.paintComponent(g);
-            Graphics2D g2d = (Graphics2D) g;
-            int random = getRandom().nextInt(10);
-            double angle = Math.toRadians(random * 90);
-            g2d.rotate(angle, this.getWidth() / 2.0, this.getHeight() / 2.0);
-            this.paint = false;
-        }
-    }
-    private void setTypesInfo(int dimension){
+
+    private void setTypesInfo(int dimension) {
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
-                if(this.board[i][j].getState().equals(State.STRAIGHT)){
+                if (this.board[i][j].getState().equals(State.STRAIGHT)) {
                     this.board[i][j].setStraightPositionInfo();
                 }
-                if(this.board[i][j].getState().equals(State.LTYPE)){
+                if (this.board[i][j].getState().equals(State.LTYPE)) {
                     this.board[i][j].setLTypePositionInfo();
                 }
-                if(this.board[i][j].getState().equals(State.START)){
+                if (this.board[i][j].getState().equals(State.START)) {
                     this.board[i][j].setStartPositionInfo();
                 }
-                if(this.board[i][j].getState().equals(State.END)){
+                if (this.board[i][j].getState().equals(State.END)) {
                     this.board[i][j].setEndPositionInfo();
+                }
+
+                for(int k = 0;k < getRandom().nextInt(4);k++) {
+                    this.board[i][j].swapTypePositionInfo();
                 }
             }
         }
     }
+
     private void initializeBoard(int dimension) {
 
         this.board = new Pipe[dimension][dimension];
@@ -72,45 +67,62 @@ public class Board extends JPanel {
         }
 
 
-
     }
+
     public void setPipes(int dimension) {
 
         int StartPoz = getRandom().nextInt(dimension);
         int EndPoz = getRandom().nextInt(dimension);
-
         this.genrateDPS(dimension, StartPoz, EndPoz);
 
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                boolean random = getRandom().nextBoolean();
+        for (int row = 0; row < dimension; row++) {
+            for (int col = 0; col < dimension; col++) {
 
-                if(this.path[i][j] == 1){
-                    if(random) {
-                        this.board[i][j].setState(State.STRAIGHT);
-                    }else{
-                        this.board[i][j].setState(State.LTYPE);
+                if (this.path[row][col] == 1) {
+                    boolean lpipe = true;
 
-                    }
+                        if (row -1 >= 0 && row + 1 < path.length) {
+                            if (path[row - 1][col] == 1 && path[row + 1][col] == 1) {
+                                lpipe = false;
+                            }
 
+                        }
+                        if (col -1 >= 0 && col -1 < path.length && col + 1 < path[0].length) {
+                            if (path[row][col - 1] == 1 && path[row][col + 1] == 1) {
+                                lpipe = false;
+                            }
+                        }
+
+                        if ( row + 1 < path.length && row - 1 >= 0 ) {
+                            if (path[row + 1][col] == 1 && path[row - 1][col] == 1) {
+                                lpipe = false;
+
+                            }
+                        }
+
+                        if ( col +1 < path.length && col - 1 >= 0 && col - 1 < path[0].length) {
+                            if (path[row][col + 1] == 1 && path[row][col - 1] == 1) {
+                                lpipe = false;
+
+                            }
+                        }
+
+                    if(lpipe){this.board[row][col].setState(State.LTYPE);}
+
+                    else {this.board[row][col].setState(State.STRAIGHT);}
                 }
-
             }
         }
-            this.board[StartPoz][0].setPozition(Pozition.RIGHT, 1);
-            this.board[StartPoz][0].setState(State.START);
 
-            this.board[EndPoz][dimension - 1].setPozition(Pozition.LEFT, 0);
-            this.board[EndPoz][dimension - 1].setState(State.END);
+
+        this.board[StartPoz][0].setPozition(Pozition.RIGHT, 1);
+        this.board[StartPoz][0].setState(State.START);
+
+        this.board[EndPoz][dimension - 1].setPozition(Pozition.LEFT, 0);
+        this.board[EndPoz][dimension - 1].setState(State.END);
 
 
     }
-
-public Random getRandom(){
-    return new Random();
-
-}
-
     private void genrateDPS(int dimension, int StartPoz, int EndPoz){
         this.dps = new int[dimension][dimension];
         generateMaze(0, 0,dimension);
@@ -120,6 +132,7 @@ public Random getRandom(){
         if(path ==null){
             genrateDPS(dimension,StartPoz,EndPoz);
         }
+
 
     }
     private void generateMaze(int x, int y,int dimension) {
@@ -200,11 +213,9 @@ public Random getRandom(){
             }
         }
         shortestPath[0][0] = 0;
+        shortestPath[StartPoz][0] = 1;
         return shortestPath;
     }
 
-
-
-
-
+    public Random getRandom(){return new Random();}
 }

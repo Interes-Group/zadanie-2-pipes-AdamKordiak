@@ -22,6 +22,7 @@ public class Pipe extends JPanel {
         this.state = State.FREE;
         this.setBorder(BorderFactory.createLineBorder(new Color(51,153,255)));
         this.setBackground(new Color(51,204,255));
+
         this.pozition = new Pozition[]{null,null};
 
 
@@ -74,20 +75,24 @@ public class Pipe extends JPanel {
                 }
         if (this.state.equals(State.START)) {
 
-            if(this.getPozition(1).equals(Pozition.DOWN)){angle = Math.toRadians(90);}
-            if(this.getPozition(1).equals(Pozition.LEFT)){angle = Math.toRadians(180);}
-            if(this.getPozition(1).equals(Pozition.UP)){angle = Math.toRadians(270);}
-
-
             g2d.rotate(angle,this.getWidth()/2.0,this.getHeight()/2.0);
 
             g2d.setColor(new Color(153, 153, 153));
             g2d.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.38),
                     (int) (this.getWidth() * 0.9), (int) (this.getHeight() * 0.25));
 
+            g.fillRect((int) (0 + this.getWidth() * 0.3911), (int) (0 + this.getHeight() * 0.001),
+                    (int) (this.getWidth() * 0.23), (int) (this.getHeight() * 0.9));
+
             g2d.setColor(new Color(102, 102, 102));
             g2d.fillRect((int) (0 + this.getWidth() * 0.79), (int) (0 + this.getHeight() * 0.261),
                     (int) (this.getWidth() * 0.5), (int) (this.getHeight() * 0.5));
+
+            g.fillRect((int) (0 + this.getWidth() * 0.2608), (int) (0 + this.getHeight() * 0.001),
+                    (int) (this.getWidth() * 0.5), (int) (this.getHeight() * 0.2));
+
+            g.fillRect((int) (0 + this.getWidth() * 0.2608), (int) (0 + this.getHeight() * 0.8),
+                    (int) (this.getWidth() * 0.5), (int) (this.getHeight() * 0.99));
 
 
             g2d.setColor(new Color(102,255,102));
@@ -142,19 +147,24 @@ public class Pipe extends JPanel {
         }
         if (this.state.equals(State.END)) {
 
-            if(this.getPozition(0).equals(Pozition.UP)){angle = Math.toRadians(90);}
-            if(this.getPozition(0).equals(Pozition.RIGHT)){angle = Math.toRadians(180);}
-            if(this.getPozition(0).equals(Pozition.DOWN)){angle = Math.toRadians(270);}
-
             g2d.rotate(angle,this.getWidth()/2.0,this.getHeight()/2.0);
 
             g.setColor(new Color(153, 153, 153));
             g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.38),
                     (int) (this.getWidth() * 0.999), (int) (this.getHeight() * 0.25));
 
+            g.fillRect((int) (0 + this.getWidth() * 0.3911), (int) (0 + this.getHeight() * 0.001),
+                    (int) (this.getWidth() * 0.23), (int) (this.getHeight() * 0.9));
+
             g.setColor(new Color(102, 102, 102));
             g.fillRect((int) (0 + this.getWidth() * 0.001), (int) (0 + this.getHeight() * 0.261),
                     (int) (this.getWidth() * 0.21), (int) (this.getHeight() * 0.5));
+
+            g.fillRect((int) (0 + this.getWidth() * 0.2608), (int) (0 + this.getHeight() * 0.001),
+                    (int) (this.getWidth() * 0.5), (int) (this.getHeight() * 0.2));
+
+            g.fillRect((int) (0 + this.getWidth() * 0.2608), (int) (0 + this.getHeight() * 0.8),
+                    (int) (this.getWidth() * 0.5), (int) (this.getHeight() * 1.0));
 
 
             g.setColor(new Color(255,102,102));
